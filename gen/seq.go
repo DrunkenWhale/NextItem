@@ -15,24 +15,14 @@ type Point struct {
 }
 
 func LagrangianInterpolation(points []*Point) {
-	big.Int{}
+
 }
 
-func gcd(x, y int) int {
-	if x < y {
-		x, y = swap(x, y)
+func calculateLagrangianCoefficient(index int, points []*Point) {
+	xj := points[index].X
+	res := big.NewInt(1)
+	tmp := big.NewInt(0)
+	for i := 0; i < len(points); i++ {
+		res = tmp.Mul(big.NewInt(int64(xj-points[i].X)), res)
 	}
-	return _gcd(x, y)
-}
-
-func _gcd(x, y int) int {
-	if y == 0 {
-		return x
-	} else {
-		return _gcd(y, x%y)
-	}
-}
-
-func swap(a, b int) (int, int) {
-	return b, a
 }
