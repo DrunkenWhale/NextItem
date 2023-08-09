@@ -1,0 +1,1 @@
+go build -o next-item cmd/main.go

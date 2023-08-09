@@ -13,6 +13,11 @@ type X struct {
 }
 
 func NewAlgebra(coefficientNumerator, coefficientDenominator *big.Int, power int) *X {
+	if coefficientDenominator.Cmp(big.NewInt(0)) < 0 { // 分母小于0
+		// 把负号移给分子 好操作
+		coefficientDenominator = big.NewInt(0).Mul(coefficientDenominator, big.NewInt(-1))
+		coefficientNumerator = big.NewInt(0).Mul(coefficientNumerator, big.NewInt(-1))
+	}
 	return &X{
 		CoefficientNumerator:   coefficientNumerator,
 		CoefficientDenominator: coefficientDenominator,
@@ -83,7 +88,7 @@ func (x *X) String() string {
 		}
 		if x.CoefficientDenominator.Cmp(big.NewInt(1)) == 0 {
 			if x.CoefficientNumerator.Cmp(big.NewInt(1)) == 0 {
-				return fmt.Sprintf("")
+				return fmt.Sprintf("1")
 			}
 			return fmt.Sprintf("%v", x.CoefficientNumerator)
 		}
