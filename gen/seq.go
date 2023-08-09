@@ -1,6 +1,9 @@
 package gen
 
-import "math/big"
+import (
+	"Sequence/algebra"
+	"math/big"
+)
 
 func NewPoint(x, y int) *Point {
 	return &Point{
@@ -14,15 +17,31 @@ type Point struct {
 	Y int
 }
 
-func LagrangianInterpolation(points []*Point) {
-	
+func LagrangianInterpolation(points []*Point) *algebra.Equation {
+	res := algebra.NewEquation([]*algebra.X{})
+	for i := range points {
+		res = res.AddEquation(calculateLagrangianSingle(i, points))
+	}
+	return res.Sort()
 }
 
-func calculateLagrangianCoefficient(index int, points []*Point) {
+// 一个拉格朗日插值法中的单项 不知道怎么拼写捏
+func calculateLagrangianSingle(index int, points []*Point) *algebra.Equation {
 	xj := points[index].X
-	res := big.NewInt(1)
-	tmp := big.NewInt(0)
+	num := algebra.NewEquation([]*algebra.X{ // 分子
+		{big.NewInt(1), big.NewInt(1), 0},
+	})
+	den := big.NewInt(1) // 分母
 	for i := 0; i < len(points); i++ {
-		res = tmp.Mul(big.NewInt(int64(xj-points[i].X)), res)
+		if i == index {
+			continue
+		}
+		eqa := algebra.NewEquation([]*algebra.X{
+			{big.NewInt(1), big.NewInt(1), 1},
+		})
+		num = num.MulEquation(eqa.Sub(algebra.NewAlgebra(big.NewInt(int64(points[i].X)), big.NewInt(1), 0)))
+		den = big.NewInt(0).Mul(big.NewInt(int64(xj-points[i].X)), den)
 	}
+	return num.Div(algebra.NewAlgebra(den, big.NewInt(1), 0)).
+		Mul(algebra.NewAlgebra(big.NewInt(int64(points[index].Y)), big.NewInt(1), 0))
 }
