@@ -2,6 +2,7 @@ package main
 
 import (
 	"Sequence/gen"
+	"errors"
 	"fmt"
 	"github.com/urfave/cli/v2"
 	"log"
@@ -39,6 +40,9 @@ func main() {
 				xArray, err = convertStringToIntArray(s, ",")
 				if err != nil {
 					return err
+				}
+				if len(xArray) != len(yArray) {
+					return errors.New("invalid abscissa")
 				}
 			} else { // 默认值
 				for i := 0; i < len(yArray); i++ {
