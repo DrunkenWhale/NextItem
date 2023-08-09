@@ -39,7 +39,7 @@ func (x *X) Mul(y *X) *X {
 	on := big.NewInt(0).Mul(x.CoefficientNumerator, y.CoefficientNumerator)
 	od := big.NewInt(0).Mul(x.CoefficientDenominator, y.CoefficientDenominator)
 	nn, nd := util.RFCD(on, od)
-	return NewAlgebra(nn, nd, x.Power*y.Power)
+	return NewAlgebra(nn, nd, x.Power+y.Power)
 }
 
 // Sub 返回二者相减法的值 不会对原对象有所影响
@@ -64,6 +64,18 @@ func (x *X) Div(y *X) *X {
 	return NewAlgebra(nn, nd, x.Power-y.Power)
 }
 
+// CmpCoefficient 只比较系数
+// -1 if x <  y
+//
+//	0 if x == y
+//
+// +1 if x >  y
+func (x *X) CmpCoefficient(y *X) int {
+	return big.NewInt(0).Mul(x.CoefficientNumerator, y.CoefficientDenominator).Cmp(
+		big.NewInt(0).Mul(x.CoefficientDenominator, y.CoefficientNumerator),
+	)
+}
+
 func (x *X) String() string {
 	if x.Power == 0 {
 		if x.CoefficientNumerator.Cmp(big.NewInt(0)) == 0 {
@@ -76,6 +88,18 @@ func (x *X) String() string {
 			return fmt.Sprintf("%v", x.CoefficientNumerator)
 		}
 		return fmt.Sprintf("\\frac{%v}{%v} ", x.CoefficientNumerator, x.CoefficientDenominator)
+	}
+	if x.Power == 1 {
+		if x.CoefficientNumerator.Cmp(big.NewInt(0)) == 0 {
+			return fmt.Sprintf("")
+		}
+		if x.CoefficientDenominator.Cmp(big.NewInt(1)) == 0 {
+			if x.CoefficientNumerator.Cmp(big.NewInt(1)) == 0 {
+				return fmt.Sprintf("x")
+			}
+			return fmt.Sprintf("%v x", x.CoefficientNumerator)
+		}
+		return fmt.Sprintf("\\frac{%v}{%v} x", x.CoefficientNumerator, x.CoefficientDenominator)
 	}
 	if x.CoefficientNumerator.Cmp(big.NewInt(0)) == 0 { // 分子为0
 		return fmt.Sprintf("")

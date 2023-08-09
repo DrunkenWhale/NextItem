@@ -15,7 +15,7 @@ type Point struct {
 }
 
 func LagrangianInterpolation(points []*Point) {
-
+	
 }
 
 func calculateLagrangianCoefficient(index int, points []*Point) {
