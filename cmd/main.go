@@ -14,11 +14,11 @@ import (
 func main() {
 	app := &cli.App{
 		Name:  "NextItem",
-		Usage: "给出坐标序列, 生成一个能够满足这些序列的函数 例如: ./",
+		Usage: "给出坐标序列, 生成一个能够满足这些序列的函数 例如: ./next-item -y 1,2,3",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:     "abscissa",
-				Usage:    "横坐标, 形如 1,2,3,4,5 用逗号分隔且不能有空格 缺省时默认从1开始递增(按设定来说 是不是应该从0开始递增?).",
+				Usage:    "横坐标, 形如 1,2,3,4,5 用逗号分隔且不能有空格, 由于函数的特性, 值也不能重复. 缺省时默认从1开始递增(按设定来说 是不是应该从0开始递增?).",
 				Value:    "",
 				Required: false,
 				Aliases:  []string{"x"},
